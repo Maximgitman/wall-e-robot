@@ -7,11 +7,10 @@ class History(object):
         self.maps = []
         for obs in obstacles:
             self.maps.append(obs)
-        print(len(self.maps))
-        self.relative_pos = np.zeros((len(obstacles), 2), dtype=np.int)   # сдвиг агента относительно стартовой точки
-        self.curr_pos = np.ones((len(obstacles), 2), dtype=np.int) * 5    # текущее положение агента в map
-        self.edges = np.zeros((len(obstacles), 4), dtype=np.int)          # Пределы куда доходили вгенты на своих картах
-                                                                          # [max_up, min_down, min_left, max_right]
+        self.relative_pos = np.zeros((len(obstacles), 2), dtype=np.int32)   # сдвиг агента относительно стартовой точки
+        self.curr_pos = np.ones((len(obstacles), 2), dtype=np.int32) * 5    # текущее положение агента в map
+        self.edges = np.zeros((len(obstacles), 4), dtype=np.int32)          # Пределы куда доходили вгенты на своих картах
+                                                                            # [min_up, max_down, min_left, max_right]
         self.steps = {0: (0, 0),   # stay
                       1: (-1, 0),  # up
                       2: (1, 0),   # down
@@ -26,22 +25,22 @@ class History(object):
         self.curr_pos += actions
 
         for bot, obs in enumerate(obstacles):
-            max_up, min_down, min_left, max_right = self.edges[bot]
+            min_up, max_down, min_left, max_right = self.edges[bot]
 
             # проверяеям выход за верхний предел для агента
-            if self.relative_pos[bot, 0] > max_up:
+            if self.relative_pos[bot, 0] < min_up:
                 new_line = np.empty((1, self.maps[bot].shape[1]))
                 new_line[:] = np.NaN
                 self.maps[bot] = np.concatenate((new_line, self.maps[bot]), axis=0)
-                max_up = self.relative_pos[bot, 0]
+                min_up = self.relative_pos[bot, 0]
                 self.curr_pos[bot, 0] += 1
 
             # проверяеям выход за нижний предел для агента
-            elif self.relative_pos[bot, 0] < min_down:
+            elif self.relative_pos[bot, 0] > max_down:
                 new_line = np.empty((1, self.maps[bot].shape[1]))
                 new_line[:] = np.NaN
                 self.maps[bot] = np.concatenate((self.maps[bot], new_line), axis=0)
-                min_down = self.relative_pos[bot, 0]
+                max_down = self.relative_pos[bot, 0]
 
             # проверяеям выход за левый предел для агента
             if self.relative_pos[bot, 1] < min_left:
@@ -59,7 +58,7 @@ class History(object):
                 max_right = self.relative_pos[bot, 1]
 
             # обновляем пределы для агента
-            self.edges[bot] = np.array((max_up, min_down, min_left, max_right))
+            self.edges[bot] = np.array((min_up, max_down, min_left, max_right))
 
             # обновляем карту агента
             x, y = self.curr_pos[bot]
@@ -79,7 +78,7 @@ if __name__ == '__main__':
                            [1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0],
                            [0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1],
                            [1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1]], dtype=np.float)
+                           [0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1]], dtype=np.float64)
     obstacles2 = np.array([[0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1],
                            [0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0],
                            [0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1],
@@ -90,7 +89,7 @@ if __name__ == '__main__':
                            [0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1],
                            [0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0],
                            [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1],
-                           [0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0]], dtype=np.float)
+                           [0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0]], dtype=np.float64)
     res = np.array([[1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1],
                     [0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0],
                     [1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1],
@@ -101,7 +100,7 @@ if __name__ == '__main__':
                     [1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1],
                     [0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0],
                     [1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1],
-                    [0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0]], dtype=np.float)
+                    [0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0]], dtype=np.float64)
 
     h = History([obstacles1])
     res_h = h.update_history([obstacles2], [4])
