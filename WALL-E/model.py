@@ -4,7 +4,7 @@
 
 
 
-import networkx as nx
+# import networkx as nx
 import gym
 # from pogema.wrappers.multi_time_limit import MultiTimeLimit
 from pogema.animation import AnimationMonitor
@@ -14,6 +14,8 @@ import numpy as np
 from pogema import GridConfig
 # import matplotlib.pyplot as plt
 
+
+from custom_networkx import astar_path, grid_graph
 
 
 # 0. Cкладываем матрицы агентов и препядствий (они пересеаться не будут)
@@ -63,7 +65,8 @@ class Model:
         # основной код - генерим граф делаем поиск А*
         next_step = []
         for edging, a, b in zip(edging_, a_, b_):
-            G = nx.grid_graph(edging.shape) 
+            # G = nx.grid_graph(edging.shape)
+            G = grid_graph(edging.shape)
             x, y = np.where(edging ==1) 
             for i, j in zip(x,y):
                 if (i,j) != a and (i,j) != b:
@@ -72,7 +75,7 @@ class Model:
                     except:
                         print('error', i, j)
             try:
-                path = np.array(nx.astar_path(G, a, b)[1]) - a
+                path = np.array(astar_path(G, a, b)[1]) - a
                 steps = {
                     0: (0, 0),
                     2: (1, 0),   
@@ -90,11 +93,11 @@ class Model:
 
 def main():
     # Define random configuration
-    grid_config = GridConfig(num_agents=32,  # количество агентов на карте
-                             size=64,  # размеры карты
+    grid_config = GridConfig(num_agents=8,  # количество агентов на карте
+                             size=16,  # размеры карты
                              density=0.2,  # плотность препятствий
                              seed=6,  # сид генерации задания
-                             max_episode_steps=256,  # максимальная длина эпизода
+                             max_episode_steps=5,  # максимальная длина эпизода
                              obs_radius=5,  # радиус обзора
                              )
 

@@ -1,6 +1,7 @@
-*/render.svg
-*/renders/
+*render.svg
+*renders/
 Jupyter Notebook/agents
 Jupyter Notebook/average_scores.npy
 Jupyter Notebook/pogema_dqn.h5
 Jupyter Notebook/scores.npy
+*__pycache__
