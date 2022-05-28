@@ -16,7 +16,7 @@ from pogema import GridConfig
 
 
 from custom_networkx import astar_path, grid_graph
-
+from history import History
 
 # 0. Cкладываем матрицы агентов и препядствий (они пересеаться не будут)
 # 1. Добавляем рамку по краям
