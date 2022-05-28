@@ -7,6 +7,7 @@ class History(object):
         self.maps = []
         for obs in obstacles:
             self.maps.append(obs)
+        print(len(self.maps))
         self.relative_pos = np.zeros((len(obstacles), 2), dtype=np.int)   # сдвиг агента относительно стартовой точки
         self.curr_pos = np.ones((len(obstacles), 2), dtype=np.int) * 5    # текущее положение агента в map
         self.edges = np.zeros((len(obstacles), 4), dtype=np.int)          # Пределы куда доходили вгенты на своих картах

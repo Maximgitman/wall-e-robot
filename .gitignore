@@ -5,3 +5,5 @@ Jupyter Notebook/average_scores.npy
 Jupyter Notebook/pogema_dqn.h5
 Jupyter Notebook/scores.npy
 *__pycache__
+*render_1.svg
+.DS_Store
