@@ -26,45 +26,52 @@ class Model:
         self.actions = {tuple(GridConfig().MOVES[i]): i for i in
                         range(len(GridConfig().MOVES))}  # make a dictionary to translate coordinates of actions into id
         
-        # self.history = history
-        # count_agents = len(self.history.maps) 
+        self.history = history
+        count_agents = len(self.history.maps) 
     
-        # self.steps = [[0 for i in range(count_agents)]] if self.history is not None else []
-        self.steps = []
+        self.steps = [[0 for i in range(count_agents)]] if self.history is not None else []
         self.steps_corr = []
+        self.errors = 0
 
     def act(self, obs, dones, positions_xy, targets_xy, ) -> list:
         
         # Достаем предыдущий шаг
-        
-        # # try:
-        # if self.history is not None:
-        #     steps = self.steps[-1]  
+
+        if self.history is not None:
+            steps = self.steps[-1]  
             
-        #     obs_new = self.history.update_history([i[0] for i in obs], steps)
-        #     print('obs_new>>>\n', obs_new)
-        # # except:
-        # #     print('первый шаг')
-       
-        
-        # list_corr_agents = self.history.curr_pos
-        # print('!!!!', list_corr_agents)
-
-        # for i in obs[...,0]:
-
-        # Для поcтройки всего пути - для штрафов. можем использовать 
-        # self.steps_corr 
+            self.history.update_history([i[0] for i in obs], steps)
 
         
-        def custom_concat_matrix(obs, agents):
-            ...
+        def custom_concat_matrix(iter_, agents_one):
+             # обновляем карту агента
+            x, y  = self.history.curr_pos[iter_]
+            # print(x, y)
+            temp_maps = self.history.maps[iter_].copy()
+            temp_maps[x-5:x+6, y-5:y+6] += agents_one
+            print(temp_maps.shape)
+            return temp_maps
 
+        def veiw_shot_list(res, x, y):
+            x, y = np.where(res[x-1:y+2,x-1:y+2] == 0)
+            path = np.array([(i,j) for i, j in zip(x, y)]) - (1,1)
+            steps = {
+                    0: (0, 0),
+                    2: (1, 0),   
+                    1: (-1, 0),  
+                    4: (0, 1),   
+                    3: (0, -1),  
+                }
+            x_ = [[k for k in steps if (steps[k] == i).all()] for i in path]
+            return [i for j in x_ for i in j]
+
+        
 
         # Подготавливаем расширенную матрицу с окантовкой и смещенными точками старта\финиша
         a_ = []
         b_ = []
         edging_ = []
-        for i in obs:
+        for ind, i in enumerate(obs):
             pos_i_temp, pos_j_temp = np.where(i[2] == 1)
             a_temp = (int(i.shape[1]/2)+1,int(i.shape[1]/2)+1)
 
@@ -83,8 +90,7 @@ class Model:
             #     edging_temp = np.pad(i[0]+i[1], pad_width=1, mode='constant', constant_values=0)[:-2]
 
             # else:
-            edging_temp = np.pad(i[0]+i[1], pad_width=1, mode='constant', constant_values=0) #custom_concat_matrix(i[0],i[1])
-
+            edging_temp = np.pad(i[0]+i[1], pad_width=1, mode='constant', constant_values=0) #custom_concat_matrix(ind, i[1])
             edging_.append(edging_temp)
             a_.append(a_temp)
             b_.append((pos_i_temp[0]+1, pos_j_temp[0]+1))
@@ -100,26 +106,34 @@ class Model:
                 if (i,j) != a and (i,j) != b:
                     try:
                         G.remove_node((i,j))
-                    except:
-                        print('error', i, j)
-            try:
-                path = np.array(nx.astar_path(G, a, b)[1]) - a
-                steps = {
-                    0: (0, 0),
-                    2: (1, 0),   
-                    1: (-1, 0),  
-                    4: (0, 1),   
-                    3: (0, -1),  
-                }
-                next_step.append([k for k in steps if (steps[k] == path).all()][0])
-            except:
-                # исправить на действие доступное в области видимости
+                    except:...
+                        # print('error', i, j)
 
-                next_step.append(np.random.randint(4))
-
+            if edging[6,6] == 1:
+                try:
+                    path = np.array(nx.astar_path(G, a, b)[1]) - a
+                    steps = {
+                        0: (0, 0),
+                        2: (1, 0),   
+                        1: (-1, 0),  
+                        4: (0, 1),   
+                        3: (0, -1),  
+                    }
+                    # nx.draw(G,)
+                    next_step.append([k for k in steps if (steps[k] == path).all()][0])
+                except:
+                    self.errors +=1
+                    # исправить на действие доступное в области видимости
+                    print('AAAAAAuhhh    a = ', a)
+                    true_step = veiw_shot_list(edging, 6, 6)
+                    # v = [1 for i in range(len(true_step))]
+                    # v_ = np.exp(v)/np.sum(np.exp(v))
+                    next_step.append(np.random.choice(true_step)) 
+            else:
+                next_step.append(0)
         # проверка на пропуск хода
         for ind, i in enumerate([i[1] for i in obs]):
-            if (i[5,6] == 1 or i[4,5] == 1 or i[4,6] == 1) and  i[5,5] == 1:
+            if (i[4,4] == 1 or i[5,6] == 1 or i[4,5] == 1 or i[4,6] == 1 or i[6,6] == 1) and  i[5,5] == 1:
                 print('стоим на месте')
                 next_step[ind] = 0
                 path = (0,0)
@@ -128,14 +142,13 @@ class Model:
         try:
             # по агентам
             for ind, i in enumerate(range(len(obs))):
-                history_path = [j[i] for j in self.steps[-5:]]
+                history_path = [j[i] for j in self.steps[-4:]]
                 x_ = np.unique(history_path[::2])
                 x_1 = np.unique(history_path[1::2])
                 if len(x_) == 1  and len(x_1) == 1:
                     print('Врубаем жесткий рандом!!!!!')
                     temp_step = next_step[ind]
-                    # temp_step >1
-                    true_step = [0,1,2,3,4]
+                    true_step = veiw_shot_list(edging, 5, 5)
                     true_step.pop(temp_step)
                     v = [1 for i in range(len(true_step))]
                     try:
@@ -146,16 +159,13 @@ class Model:
                         ind_2 =  true_step.index(x_)
                         v[ind_2] = v[ind_2]/2
                     except:...
+                    try:
+                        ind_3 = true_step.index(0)
+                        v[ind_3] = v[ind_3]/2
+                    except:...
                     v_ = np.exp(v)/np.sum(np.exp(v))
                     next_step[ind] = np.random.choice(true_step, p=v_)
-
-            # 0.71875   0.65625 
-
-
-        except:
-            print('набираем буфер')
-
-
+        except:...
         # Сохраняем текущий шаг
         self.steps.append(next_step)
         self.steps_corr.append(path)
@@ -195,8 +205,9 @@ def main():
     CSR = info[0]['metrics'].get('CSR')
     ISR = np.mean([x['metrics'].get('ISR',0) for x in info])
     print('CSR = ', CSR, 'ISR = ',  ISR,'\n')
+    print(f'errors = {solver.errors}')
 
-
+    print(env.get_agents_xy())
 
 if __name__ == '__main__':
     main()
