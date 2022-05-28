@@ -27,10 +27,10 @@ class Model:
                         range(len(GridConfig().MOVES))}  # make a dictionary to translate coordinates of actions into id
         
         # self.history = history
-        # count_agents = len(self.history.maps) 
+        count_agents = 0 #len(self.history.maps) 
     
-        # self.steps = [[0 for i in range(count_agents)]] if self.history is not None else []
-        self.steps = []
+        self.steps = [[0 for i in range(count_agents)]] if history is not None else []
+
         self.steps_corr = []
 
     def act(self, obs, dones, positions_xy, targets_xy, ) -> list:
@@ -114,46 +114,25 @@ class Model:
                 next_step.append([k for k in steps if (steps[k] == path).all()][0])
             except:
                 # исправить на действие доступное в области видимости
-
                 next_step.append(np.random.randint(4))
 
         # проверка на пропуск хода
         for ind, i in enumerate([i[1] for i in obs]):
             if (i[5,6] == 1 or i[4,5] == 1 or i[4,6] == 1) and  i[5,5] == 1:
-                print('стоим на месте')
+                # print('стоим на месте')
                 next_step[ind] = 0
                 path = (0,0)
 
         # Проверка на зацикленность
-        try:
-            # по агентам
-            for ind, i in enumerate(range(len(obs))):
-                history_path = [j[i] for j in self.steps[-5:]]
-                x_ = np.unique(history_path[::2])
-                x_1 = np.unique(history_path[1::2])
-                if len(x_) == 1  and len(x_1) == 1:
-                    print('Врубаем жесткий рандом!!!!!')
-                    temp_step = next_step[ind]
-                    # temp_step >1
-                    true_step = [0,1,2,3,4]
-                    true_step.pop(temp_step)
-                    v = [1 for i in range(len(true_step))]
-                    try:
-                        ind_1 = true_step.index(x_)
-                        v[ind_1] = v[ind_1]/2
-                    except:...
-                    try:
-                        ind_2 =  true_step.index(x_)
-                        v[ind_2] = v[ind_2]/2
-                    except:...
-                    v_ = np.exp(v)/np.sum(np.exp(v))
-                    next_step[ind] = np.random.choice(true_step, p=v_)
 
-            # 0.71875   0.65625 
-
-
-        except:
-            print('набираем буфер')
+        # try:
+        #     for ind, i in enumerate(self.steps[-7:]):
+        #         if 
+        #             print('зациклились врубаем рандом')
+        #             next_step[ind] = np.random.randint(4)
+        #             path = steps[next_step[ind]]
+        # except:
+        #     print('набираем буфер')
 
 
         # Сохраняем текущий шаг
@@ -163,15 +142,9 @@ class Model:
         return next_step
 
 
-def main():
+def main(grid_config):
     # Define random configuration
-    grid_config = GridConfig(num_agents=32,  # количество агентов на карте
-                             size=64,  # размеры карты
-                             density=0.3,  # плотность препятствий
-                             seed=6,  # сид генерации задания
-                             max_episode_steps=256,  # максимальная длина эпизода
-                             obs_radius=5,  # радиус обзора
-                             )
+    
     from pogema.wrappers.metrics import MetricsWrapper
     env = gym.make("Pogema-v0", grid_config=grid_config)
     env = AnimationMonitor(env)
@@ -179,8 +152,8 @@ def main():
     obs = env.reset()
 
     done = [False for k in range(len(obs))]
-    history = History([i[0] for i in obs])
-    solver = Model(history) 
+    # history = History([i[0] for i in obs])
+    solver = Model() #history
 
     while not all(done):
         # Используем AStar
@@ -194,9 +167,28 @@ def main():
     env.save_animation("render_1.svg", egocentric_idx=None)
     CSR = info[0]['metrics'].get('CSR')
     ISR = np.mean([x['metrics'].get('ISR',0) for x in info])
-    print('CSR = ', CSR, 'ISR = ',  ISR,'\n')
+    return CSR, ISR
+
+
+
 
 
 
 if __name__ == '__main__':
-    main()
+    csr = []
+    isr= []
+    for i in range(3):
+        print('\n>>>',i)
+        grid_config = GridConfig(num_agents=32,  # количество агентов на карте
+                                size=64,  # размеры карты
+                                density=0.3,  # плотность препятствий
+                                seed=np.random.randint(100),  # сид генерации задания
+                                max_episode_steps=256,  # максимальная длина эпизода
+                                obs_radius=5,  # радиус обзора
+                                )
+        CSR, ISR =  main(grid_config)
+        print(CSR, ISR)
+        csr.append(CSR)
+        isr.append(ISR)
+    print(csr)
+    print('CSR = ', np.mean(csr), 'ISR = ',  np.mean(isr),'\n')
