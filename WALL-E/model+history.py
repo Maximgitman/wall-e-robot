@@ -11,7 +11,7 @@ from pogema import GridConfig
 
 
 # from custom_networkx import astar_path, grid_graph
-# from history import History
+from history import History
 
 # 0. Cкладываем матрицы агентов и препядствий (они пересеаться не будут)
 # 1. Добавляем рамку по краям
@@ -21,8 +21,6 @@ from pogema import GridConfig
 # 5. Завтра добавлю персонального картографа)
 
 
-# history = History()
-
 class Model:
     def __init__(self, history=None):
         self.agents = None
@@ -30,10 +28,9 @@ class Model:
                         range(len(GridConfig().MOVES))}  # make a dictionary to translate coordinates of actions into id
         
         self.history = history
-        # count_agents = len(self.history.maps) 
+        count_agents = len(self.history.maps) 
     
-        # self.steps = [[0 for i in range(count_agents)]] if self.history is not None else []
-        self.steps = []
+        self.steps = [[0 for i in range(count_agents)]] if self.history is not None else []
         self.steps_corr = []
         self.errors = 0
 
@@ -41,20 +38,20 @@ class Model:
         
         # Достаем предыдущий шаг
 
-        # if self.history is not None:
-        #     steps = self.steps[-1]  
+        if self.history is not None:
+            steps = self.steps[-1]  
             
-        #     self.history.update_history([i[0] for i in obs], steps)
+            self.history.update_history([i[0] for i in obs], steps)
 
         
-        # def custom_concat_matrix(iter_, agents_one):
-        #      # обновляем карту агента
-        #     x, y  = self.history.curr_pos[iter_]
-        #     # print(x, y)
-        #     temp_maps = self.history.maps[iter_].copy()
-        #     temp_maps[x-5:x+6, y-5:y+6] += agents_one
-        #     # print(temp_maps.shape)
-        #     return temp_maps
+        def custom_concat_matrix(iter_, agents_one):
+             # обновляем карту агента
+            x, y  = self.history.curr_pos[iter_]
+            # print(x, y)
+            temp_maps = self.history.maps[iter_].copy()
+            temp_maps[x-5:x+6, y-5:y+6] += agents_one
+            # print(temp_maps.shape)
+            return temp_maps
 
         def veiw_shot_list(res, x, y):
             x, y = np.where(res[x-1:y+2,x-1:y+2] == 0)
@@ -94,13 +91,13 @@ class Model:
             #     edging_temp = np.pad(i[0]+i[1], pad_width=1, mode='constant', constant_values=0)[:-2]
 
             # else:
-            edging_temp = np.pad(i[0]+i[1], pad_width=1, mode='constant', constant_values=0) #custom_concat_matrix(ind, i[1])   i[0]+i[1]
+            edging_temp = np.pad(custom_concat_matrix(ind, i[1]), pad_width=1, mode='constant', constant_values=0) #custom_concat_matrix(ind, i[1])   i[0]+i[1]
             edging_.append(edging_temp)
-            a_.append(a_temp)
-            # x, y  = self.history.curr_pos[ind]
-            # a_.append((x+1, y+1))
-            # b_.append((x-5+pos_i_temp[0]+1, y-5+pos_j_temp[0]+1))
-            b_.append((pos_i_temp[0]+1, pos_j_temp[0]+1))
+            # a_.append(a_temp)
+            x, y  = self.history.curr_pos[ind]
+            a_.append((x+1, y+1))
+            b_.append((x-5+pos_i_temp[0]+1, y-5+pos_j_temp[0]+1))
+            # b_.append((pos_i_temp[0]+1, pos_j_temp[0]+1))
 
         # основной код - генерим граф делаем поиск А*
         k = 0
@@ -132,13 +129,14 @@ class Model:
                     }
                     # nx.draw(G,)
                     step_bot = [k for k in steps if (steps[k] == path).all()][0]
-                    # if step_bot == self.steps[-1][k]:
-                    #     true_step = veiw_shot_list(obs[k][0]+obs[k][1], 5,5)
-                    #     true_step.pop(step_bot)
-                    #     true_step.pop(0)
-                    #     next_step.append(np.random.choice(true_step)) 
-                    # else:
-                    next_step.append(step_bot)
+                    if step_bot == self.steps[-1][k]:
+                        true_step = veiw_shot_list(obs[k][0]+obs[k][1], 5,5)
+                        true_step.pop(step_bot)
+                        true_step.pop(self.steps[-2][k])
+                        next_step.append(np.random.choice(true_step)) 
+                        print(step_bot,'--', true_step)
+                    else:
+                        next_step.append(step_bot)
                 except:
                     self.errors +=1
                     
@@ -211,8 +209,8 @@ def main():
     obs = env.reset()
 
     done = [False for k in range(len(obs))]
-    # history = History([i[0] for i in obs])
-    solver = Model() #history 
+    history = History([i[0] for i in obs])
+    solver = Model(history) #history 
 
     while not all(done):
         # Используем AStar
