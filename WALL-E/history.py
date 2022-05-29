@@ -21,7 +21,7 @@ class History(object):
 
     def update_history(self, obstacles, actions):
         if self.prev_actions is not None:
-            mask = [np.equal(self.prev_obstacles[i], obstacles[i]) for i in range(len(obstacles))]
+            mask = np.array([np.array_equiv(self.prev_obstacles[i], obstacles[i]) for i in range(len(obstacles))])[...,None]
             self.prev_actions *= mask
 
             # обновляем позиции относительно старта и текущие позиции на карте
@@ -34,7 +34,7 @@ class History(object):
                 # проверяеям выход за верхний предел для агента
                 if self.relative_pos[bot, 0] < min_up:
                     new_line = np.empty((1, self.maps[bot].shape[1]))
-                    new_line[:] = np.NaN
+                    new_line[:] = 1 #np.NaN
                     self.maps[bot] = np.concatenate((new_line, self.maps[bot]), axis=0)
                     min_up = self.relative_pos[bot, 0]
                     self.curr_pos[bot, 0] += 1
@@ -42,14 +42,14 @@ class History(object):
                 # проверяеям выход за нижний предел для агента
                 elif self.relative_pos[bot, 0] > max_down:
                     new_line = np.empty((1, self.maps[bot].shape[1]))
-                    new_line[:] = np.NaN
+                    new_line[:] = 1 #np.NaN
                     self.maps[bot] = np.concatenate((self.maps[bot], new_line), axis=0)
                     max_down = self.relative_pos[bot, 0]
 
                 # проверяеям выход за левый предел для агента
                 if self.relative_pos[bot, 1] < min_left:
                     new_col = np.empty((self.maps[bot].shape[0], 1))
-                    new_col[:] = np.NaN
+                    new_col[:] = 1 #np.NaN
                     self.maps[bot] = np.concatenate((new_col, self.maps[bot]), axis=1)
                     min_left = self.relative_pos[bot, 1]
                     self.curr_pos[bot, 1] += 1
@@ -57,7 +57,7 @@ class History(object):
                 # проверяеям выход за правый предел для агента
                 elif self.relative_pos[bot, 1] > max_right:
                     new_col = np.empty((self.maps[bot].shape[0], 1))
-                    new_col[:] = np.NaN
+                    new_col[:] = 1 #np.NaN
                     self.maps[bot] = np.concatenate((self.maps[bot], new_col), axis=1)
                     max_right = self.relative_pos[bot, 1]
 
@@ -106,6 +106,6 @@ if __name__ == '__main__':
                     [1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1],
                     [0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0]], dtype=np.float64)
 
-    h = History([obstacles1])
-    res_h = h.update_history([obstacles2], [4])
-    assert np.array_equal(res, res_h[0])
+    # h = History([obstacles1])
+    # res_h = h.update_history([obstacles2], [4])
+    # assert np.array_equal(res, res_h[0])
