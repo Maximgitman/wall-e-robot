@@ -1,60 +1,57 @@
+from crypt import methods
 from flask import Flask, render_template, request
-import gym
-from pogema.animation import AnimationMonitor
-import numpy as np
 from pogema import GridConfig
+from pogema.animation import AnimationMonitor
+import gym
+import numpy as np
+
 
 app = Flask(__name__)
 
+
 # Ensure templates are auto-reloaded
-app.secret_key = "not-so-secret"
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 
-# Ensure responses aren't cached
-@app.after_request
-def after_request(response):
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Expires"] = 0
-    response.headers["Pragma"] = "no-cache"
-    return response
-
-
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def index():
-    if request.method == "POST":
-        num_agents = request.form.get("num_agents")
-        map_size = request.form.get("map_size")
-        density = request.form.get("density")
+    return render_template("index.html")
 
-        # Const
-        seed = np.random.randint(0, 345546)
 
-        grid_config = GridConfig(num_agents=num_agents,  # количество агентов на карте
-                                 size=map_size,  # размеры карты
-                                 density=density,  # плотность препятствий
-                                 seed=seed,  # сид генерации задания
-                                 max_episode_steps=256,  # максимальная длина эпизода
-                                 obs_radius=5,  # радиус обзора
-                                 )
-        env = gym.make("Pogema-v0", grid_config=grid_config)
-        env = AnimationMonitor(env)
+@app.route("/create", methods=["GET", "POST"])
+def create():
+    num_agents = request.form.get("num_agents")
+    map_size = request.form.get("map_size")
+    density = request.form.get("density")
 
-        # обновляем окружение
-        obs = env.reset()
+    # Const
+    seed = np.random.randint(0, 345546)
 
-        done = [False, ...]
+    grid_config = GridConfig(num_agents=num_agents,  # количество агентов на карте
+                                size=map_size,  # размеры карты
+                                density=density,  # плотность препятствий
+                                seed=seed,  # сид генерации задания
+                                max_episode_steps=256,  # максимальная длина эпизода
+                                obs_radius=5,  # радиус обзора
+                                )
+    env = gym.make("Pogema-v0", grid_config=grid_config)
+    env = AnimationMonitor(env)
 
-        while not all(done):
-            # Используем случайную стратегию
-            obs, reward, done, info = env.step([get_action(o, i) for i, o in enumerate(obs)])
+    # обновляем окружение
+    obs = env.reset()
 
-        img_path = "renders/render.svg"
+    done = [False, ...]
 
-        return render_template("index.html",
-                               img_path=img_path)
-    else:
-        return render_template("index.html")
+    while not all(done):
+        # Используем случайную стратегию
+        obs, reward, done, info = env.step([np.random.randint(4) for _ in range(len(obs))])
+
+    env.save_animation("static/render.svg", egocentric_idx=0)
+    
+    img_path = "static/render.svg"
+
+    return render_template("create.html",
+                            img_path=img_path)
 
 
 if __name__ == "__main__":
