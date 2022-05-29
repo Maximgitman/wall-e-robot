@@ -22,9 +22,6 @@ def index():
 
 @app.route("/create", methods=["GET", "POST"])
 def create():
-    csr_scores = []
-    isr_scores = []
-
     num_agents = request.form.get("num_agents")
     map_size = request.form.get("map_size")
     density = request.form.get("density")
@@ -59,15 +56,18 @@ def create():
 
     env.save_animation("static/render.svg", egocentric_idx=None)
 
-    CSR = info[0]['metrics'].get('CSR')
-    ISR = np.mean([x['metrics'].get('ISR',0) for x in info])
+    csr = info[0]['metrics'].get('CSR')
+    isr = np.mean([x['metrics'].get('ISR',0) for x in info])
     
     img_path = "static/render.svg"
 
     return render_template("create.html",
                             img_path=img_path, 
-                            csr=CSR, 
-                            isr=ISR)
+                            csr=csr, 
+                            isr=isr, 
+                            num_agents=num_agents, 
+                            map_size=map_size, 
+                            density=density)
 
 
 if __name__ == "__main__":

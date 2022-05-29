@@ -39,11 +39,28 @@
             <div class="section">
                 {% if img_path %}
                     <h1>Result:</h1>
-                    <iframe src="{{ img_path }}" width="1000px" height="1000px"></iframe>
+                    <iframe src="{{ img_path }}" width="800px" height="850px"></iframe>
                 {% endif %}
             </div>
             <table>
-                <
+                <thead>
+                    <tr>
+                        <th>CSR</th>
+                        <th>ISR</th>
+                        <th>Num_agents</th>
+                        <th>Size map</th>
+                        <th>density</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ csr }}</td>
+                        <td>{{ isr }}</td>
+                        <td>{{ num_agents }}</td>
+                        <td>{{ map_size }}</td>
+                        <td>{{ density }}</td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </body>
