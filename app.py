@@ -4,6 +4,8 @@ from pogema import GridConfig
 from pogema.animation import AnimationMonitor
 import gym
 import numpy as np
+from pogema.wrappers.metrics import MetricsWrapper
+from static.model import Model
 
 
 app = Flask(__name__)
@@ -20,6 +22,9 @@ def index():
 
 @app.route("/create", methods=["GET", "POST"])
 def create():
+    csr_scores = []
+    isr_scores = []
+
     num_agents = request.form.get("num_agents")
     map_size = request.form.get("map_size")
     density = request.form.get("density")
@@ -35,23 +40,34 @@ def create():
                                 obs_radius=5,  # радиус обзора
                                 )
     env = gym.make("Pogema-v0", grid_config=grid_config)
+    env = MetricsWrapper(env)
     env = AnimationMonitor(env)
 
     # обновляем окружение
     obs = env.reset()
 
-    done = [False, ...]
+    done = [False for k in range(len(obs))]
+
+    solver = Model()
 
     while not all(done):
-        # Используем случайную стратегию
-        obs, reward, done, info = env.step([np.random.randint(4) for _ in range(len(obs))])
+      # Используем AStar
+        obs, reward, done, info = env.step(solver.act(obs, done,
+                                                    env.get_agents_xy_relative(),
+                                                    env.get_targets_xy_relative()),
+                                                    )  
 
-    env.save_animation("static/render.svg", egocentric_idx=0)
+    env.save_animation("static/render.svg", egocentric_idx=None)
+
+    CSR = info[0]['metrics'].get('CSR')
+    ISR = np.mean([x['metrics'].get('ISR',0) for x in info])
     
     img_path = "static/render.svg"
 
     return render_template("create.html",
-                            img_path=img_path)
+                            img_path=img_path, 
+                            csr=CSR, 
+                            isr=ISR)
 
 
 if __name__ == "__main__":
