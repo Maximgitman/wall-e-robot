@@ -48,7 +48,7 @@ def create():
     solver = Model()
 
     while not all(done):
-      # Используем AStar
+        # Используем AStar
         obs, reward, done, info = env.step(solver.act(obs, done,
                                                     env.get_agents_xy_relative(),
                                                     env.get_targets_xy_relative()),
