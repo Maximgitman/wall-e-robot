@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="150" height="150" viewBox="0 -1500 1500 1500">
+<defs>
+</defs>
+<rect x="415" y="-485" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="415" y="-585" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="415" y="-685" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="415" y="-785" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="415" y="-885" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="415" y="-985" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="415" y="-1085" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="515" y="-485" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="515" y="-1085" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="615" y="-485" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="615" y="-685" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="615" y="-1085" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="715" y="-485" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="715" y="-685" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="715" y="-785" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="715" y="-1085" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="815" y="-485" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="815" y="-985" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="815" y="-1085" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="915" y="-485" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="915" y="-585" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="915" y="-1085" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="1015" y="-485" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="1015" y="-585" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="1015" y="-685" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="1015" y="-785" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="1015" y="-885" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="1015" y="-985" width="70" height="70" rx="15" fill="#84A1AE" />
+<rect x="1015" y="-1085" width="70" height="70" rx="15" fill="#84A1AE" />
+<circle cx="850" cy="-850" r="35" fill="#c1433c">
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.0077821012;0.0116731518;0.0233463035;0.0272373541;0.0311284047;0.0350194553;0.0389105058;0.0428015564;0.046692607;0.0505836576;0.0583657588;0.0622568093;0.0661478599;0.0856031128;0.0894941634;0.1128404669;0.1167315175;0.1206225681;0.140077821;0.1439688716;0.1478599222;0.1556420233;0.1595330739;0.2256809339;0.2295719844;0.233463035;0.2373540856;0.2412451362;0.2451361868;0.2490272374;0.2529182879;0.2996108949;0.3035019455;1.0" attributeName="cy" dur="71.68s" values="-850;-850;-850;-750;-750;-650;-750;-850;-850;-750;-750;-850;-850;-950;-850;-850;-750;-750;-850;-950;-950;-850;-750;-750;-850;-850;-750;-850;-750;-750;-850;-850;-750;-750;-850;-850" />
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.0505836576;0.0544747082;0.0817120623;0.0856031128;0.1595330739;0.1634241245;1.0" attributeName="cx" dur="71.68s" values="850;850;850;750;750;650;650;550;550" />
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.9961089494;1.0" attributeName="visibility" dur="71.68s" values="visible;visible;visible;hidden" />
+</circle>
+<circle cx="550" cy="-650" r="35" fill="#2e6f9e">
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.0077821012;0.0116731518;0.0194552529;0.0233463035;0.0505836576;0.0544747082;0.0583657588;0.1245136187;0.1284046693;0.1634241245;0.1673151751;0.1789883268;0.1828793774;0.186770428;0.1906614786;0.1945525292;0.2062256809;0.2101167315;0.2140077821;0.2178988327;0.326848249;0.3307392996;1.0" attributeName="cy" dur="71.68s" values="-650;-650;-750;-650;-650;-750;-750;-650;-750;-750;-650;-650;-550;-550;-650;-550;-550;-650;-650;-550;-650;-550;-550;-650;-650" />
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;1.0" attributeName="cx" dur="71.68s" values="550;550;550" />
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.9961089494;1.0" attributeName="visibility" dur="71.68s" values="visible;visible;visible;hidden" />
+</circle>
+<circle cx="950" cy="-950" r="35" fill="#6e81af">
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.0077821012;0.0116731518;0.0155642023;0.0194552529;0.0233463035;0.0272373541;0.0311284047;0.0350194553;0.0389105058;0.0505836576;0.0544747082;0.0894941634;0.093385214;0.0972762646;0.1050583658;0.1089494163;0.1128404669;0.1167315175;0.1322957198;0.1361867704;0.1556420233;0.1595330739;0.1634241245;0.1673151751;0.1712062257;0.1789883268;0.1828793774;1.0" attributeName="cy" dur="71.68s" values="-950;-950;-850;-750;-750;-650;-650;-750;-750;-650;-750;-750;-650;-650;-750;-650;-650;-750;-750;-650;-650;-750;-750;-650;-750;-750;-650;-650;-550;-550" />
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.0583657588;0.0622568093;0.1828793774;0.186770428;0.1984435798;0.2023346304;0.326848249;0.3307392996;1.0" attributeName="cx" dur="71.68s" values="950;950;950;850;850;750;750;650;650;550;550" />
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.9961089494;1.0" attributeName="visibility" dur="71.68s" values="visible;visible;visible;hidden" />
+</circle>
+<circle cx="550" cy="-850" r="35" fill="#00b9c8">
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.0077821012;0.0116731518;0.0155642023;0.0194552529;0.0272373541;0.0311284047;0.140077821;0.1439688716;0.1478599222;0.1517509728;0.2490272374;0.2529182879;0.2957198444;0.2996108949;1.0" attributeName="cy" dur="71.68s" values="-850;-850;-850;-750;-750;-850;-850;-950;-950;-850;-850;-950;-950;-850;-850;-950;-950" />
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;1.0" attributeName="cx" dur="71.68s" values="550;550;550" />
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.9961089494;1.0" attributeName="visibility" dur="71.68s" values="visible;visible;visible;hidden" />
+</circle>
+<circle cx="750" cy="-850" r="35" fill="#72D5C8">
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.0077821012;0.0116731518;0.0194552529;0.0233463035;0.1322957198;0.1361867704;0.1517509728;0.1556420233;0.1595330739;0.2217898833;0.2256809339;0.3190661479;0.3229571984;1.0" attributeName="cy" dur="71.68s" values="-850;-850;-850;-950;-950;-850;-850;-750;-750;-850;-750;-750;-650;-650;-750;-750" />
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.0077821012;0.0272373541;0.0311284047;1.0" attributeName="cx" dur="71.68s" values="750;750;650;650;550;550" />
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.9961089494;1.0" attributeName="visibility" dur="71.68s" values="visible;visible;visible;hidden" />
+</circle>
+<circle cx="550" cy="-550" r="35" stroke="#c1433c" stroke-width="10" fill="none">
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.9961089494;1.0" attributeName="visibility" dur="71.68s" values="visible;visible;visible;hidden" />
+</circle>
+<circle cx="650" cy="-850" r="35" stroke="#2e6f9e" stroke-width="10" fill="none">
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.9961089494;1.0" attributeName="visibility" dur="71.68s" values="visible;visible;visible;hidden" />
+</circle>
+<circle cx="650" cy="-950" r="35" stroke="#6e81af" stroke-width="10" fill="none">
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.9961089494;1.0" attributeName="visibility" dur="71.68s" values="visible;visible;visible;hidden" />
+</circle>
+<circle cx="950" cy="-850" r="35" stroke="#00b9c8" stroke-width="10" fill="none">
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.9961089494;1.0" attributeName="visibility" dur="71.68s" values="visible;visible;visible;hidden" />
+</circle>
+<circle cx="850" cy="-650" r="35" stroke="#72D5C8" stroke-width="10" fill="none">
+<animate repeatCount="indefinite" keyTimes="0.0;0.0038910506;0.9961089494;1.0" attributeName="visibility" dur="71.68s" values="visible;visible;visible;hidden" />
+</circle>
+</svg>
