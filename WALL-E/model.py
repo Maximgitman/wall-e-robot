@@ -202,7 +202,7 @@ def main():
                              density=0.3,  # плотность препятствий
                              seed=6,  # сид генерации задания
                              max_episode_steps=256,  # максимальная длина эпизода
-                             obs_radius=5,  # радиус обзора
+                             obs_radius=30,  # радиус обзора
                              )
     from pogema.wrappers.metrics import MetricsWrapper
     env = gym.make("Pogema-v0", grid_config=grid_config)
